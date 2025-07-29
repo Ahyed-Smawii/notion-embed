@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiet Reflections</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #252525;
+            --card-bg: #2a2a2a;
+            --border-subtle: #3a3a3a;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a8a8a8;
+            --text-muted: #707070;
+            --accent-warm: #d4af37;
+            --accent-cool: #6b8cae;
+            --accent-sage: #9caf88;
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 40px;
+        }
+
+        .title {
+            font-family: 'Crimson Text', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .date-display {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            display: inline-block;
+            background: var(--secondary-bg);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .grid-single {
+            grid-column: 1 / -1;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-cool);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-icon {
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-cool);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--card-bg);
+            border-color: var(--accent-cool);
+        }
+
+        .btn-primary {
+            background: var(--accent-cool);
+            border-color: var(--accent-cool);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a7ca0;
+            border-color: #5a7ca0;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Daily Focus */
+        .focus-area {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .focus-prompt {
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        /* Task List */
+        .task-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background: rgba(107, 140, 174, 0.05);
+            margin: 0 -10px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .task-checkbox {
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: var(--accent-cool);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .task-completed {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .task-delete {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .task-item:hover .task-delete {
+            opacity: 1;
+        }
+
+        .task-delete:hover {
+            color: #d4af37;
+        }
+
+        /* Progress */
+        .progress-container {
+            margin: 25px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border-subtle);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-sage);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--accent-warm);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Projects & Learning */
+        .item-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--accent-sage);
+            transition: all 0.2s ease;
+        }
+
+        .item-card:hover {
+            background: rgba(156, 175, 136, 0.05);
+        }
+
+        .item-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .item-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .item-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--card-bg);
+        }
+
+        /* Daily Reflection */
+        .reflection-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 25px;
+            text-align: center;
+            border-left: 3px solid var(--accent-warm);
+        }
+
+        .reflection-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1rem;
+            color: var(--accent-warm);
+            margin-bottom: 10px;
+        }
+
+        .reflection-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Notes Section */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid,
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 30px 15px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Scrollbar */
+        .task-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: var(--border-subtle);
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 2px;
+        }
+
+        /* Subtle animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">Quiet Reflections</h1>
+            <p class="subtitle">a space for thoughtful productivity</p>
+            <div class="date-display" id="currentDate"></div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid">
+            <!-- Daily Focus -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="card-icon">•</span>
+                        Today's Intent
+                    </h2>
+                    <button class="btn btn-sm" onclick="clearTasks()">Clear</button>
+                </div>
+
+                <div class="focus-area">
+                    <p class="focus-prompt">What weighs on your mind today?</p>
+                    <textarea class="form-textarea" 
+                              placeholder="Let your thoughts settle here..." 
+                              rows="3" 
+                              id="focusInput"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" 
+                           class="form-input" 
+                           placeholder="Add a quiet task..." 
+                           id="newTaskInput"
+                           onkeypress="handleTaskKeyPress(event)">
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                    <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+                    <button class="btn" onclick="generateSmartTasks()">Gentle Suggestions</button>
+                </div>
+
+                <div class="task-list" id="taskList"></div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Beginning the journey</div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="card-icon">•</span>
+                        Daily Rhythm
+                    </h2>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="todayTasks">0</span>
+                        <div class="stat-label">Tasks</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="completedTasks">0</span>
+                        <div class="stat-label">Done</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="streakCount">1</span>
+                        <div class="stat-label">Days</div>
+                    </div>
+                </div>
+
+                <div class="reflection-card" style="margin-top: 25px;">
+                    <h4 class="reflection-title">Today's Whisper</h4>
+                    <p class="reflection-text" id="dailyInsight">Every small step carries its own quiet dignity.</p>
+                </div>
+            </div>
+
+            <!-- Current Projects -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="card-icon">•</span>
+                        Current Works
+                    </h2>
+                    <button class="btn btn-sm" onclick="addProject()">New</button>
+                </div>
+
+                <div id="projectList">
+                    <div class="item-card">
+                        <div class="item-title">Network Automation</div>
+                        <div class="item-description">Crafting Python scripts with careful attention to Cisco configurations</div>
+                        <span class="item-status">in progress</span>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-title">Analytics Dashboard</div>
+                        <div class="item-description">Building meaningful insights through thoughtful SQL queries</div>
+                        <span class="item-status">contemplating</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="card-icon">•</span>
+                        Learning Path
+                    </h2>
+                    <button class="btn btn-sm" onclick="addLearningGoal()">Add</button>
+                </div>
+
+                <div id="learningList">
+                    <div class="item-card">
+                        <div class="item-title">Cisco CCNA Journey</div>
+                        <div class="item-description">Understanding the poetry of network protocols and routing</div>
+                        <div class="progress-bar" style="margin-top: 12px;">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <small style="color: var(--text-muted); margin-top: 6px; display: block;">three quarters complete</small>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-title">Advanced SQL Craft</div>
+                        <div class="item-description">Exploring the elegance of complex queries and optimization</div>
+                        <div class="progress-bar" style="margin-top: 12px;">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <small style="color: var(--text-muted); margin-top: 6px; display: block;">nearly halfway</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes & Reflections -->
+            <div class="card grid-single">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="card-icon">•</span>
+                        Quiet Thoughts
+                    </h2>
+                    <button class="btn btn-sm" onclick="saveNotes()">Preserve</button>
+                </div>
+
+                <div class="notes-grid">
+                    <div class="form-group">
+                        <label class="form-label">Fleeting Ideas</label>
+                        <textarea class="form-textarea" 
+                                  rows="5" 
+                                  placeholder="Let your mind wander here..."
+                                  id="ideasNotes"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Daily Wisdom</label>
+                        <textarea class="form-textarea" 
+                                  rows="5" 
+                                  placeholder="What did today teach you?"
+                                  id="reflectionNotes"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let appState = {
+            tasks: [],
+            completedTasks: 0,
+            streak: parseInt(localStorage.getItem('streak')) || 1,
+        };
+
+        // Poetic insights for daily reflection
+        const dailyInsights = [
+            "Every small step carries its own quiet dignity.",
+            "Progress lives in the spaces between intention and action.",
+            "Today's work is tomorrow's foundation, laid stone by stone.",
+            "In the rhythm of routine, we find our deepest truths.",
+            "Each completed task is a small victory over chaos.",
+            "Patience with yourself is the gentlest form of wisdom.",
+            "The mind works best when it moves like water—fluid, persistent.",
+            "Every moment of focus is a gift to your future self.",
+            "In simplicity, we discover what truly matters.",
+            "Growth happens in the quiet moments between efforts."
+        ];
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            loadSavedData();
+            updateStats();
+            generateDailyInsight();
+            
+            // Auto-save every minute
+            setInterval(saveData, 60000);
+        });
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function addTask() {
+            const input = document.getElementById('newTaskInput');
+            const taskText = input.value.trim();
+            
+            if (taskText) {
+                const task = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false,
+                    createdAt: new Date()
+                };
+                
+                appState.tasks.push(task);
+                renderTask(task);
+                input.value = '';
+                updateProgress();
+                updateStats();
+            }
+        }
+
+        function renderTask(task) {
+            const taskList = document.getElementById('taskList');
+            const taskElement = document.createElement('div');
+            taskElement.className = 'task-item fade-in';
+            taskElement.dataset.taskId = task.id;
+            
+            taskElement.innerHTML = `
+                <input type="checkbox" 
+                       class="task-checkbox" 
+                       ${task.completed ? 'checked' : ''}
+                       onchange="toggleTask(${task.id})">
+                <span class="task-text ${task.completed ? 'task-completed' : ''}">${task.text}</span>
+                <button class="task-delete" onclick="deleteTask(${task.id})">×</button>
+            `;
+            
+            taskList.appendChild(taskElement);
+        }
+
+        function toggleTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                
+                const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+                const textElement = taskElement.querySelector('.task-text');
+                
+                if (task.completed) {
+                    textElement.classList.add('task-completed');
+                } else {
+                    textElement.classList.remove('task-completed');
+                }
+                
+                updateProgress();
+                updateStats();
+            }
+        }
+
+        function deleteTask(taskId) {
+            const taskIndex = appState.tasks.findIndex(t => t.id === taskId);
+            if (taskIndex > -1) {
+                appState.tasks.splice(taskIndex, 1);
+                document.querySelector(`[data-task-id="${taskId}"]`).remove();
+                updateProgress();
+                updateStats();
+            }
+        }
+
+        function clearTasks() {
+            if (confirm('Clear all tasks? This cannot be undone.')) {
+                appState.tasks = [];
+                document.getElementById('taskList').innerHTML = '';
+                updateProgress();
+                updateStats();
+            }
+        }
+
+        function handleTaskKeyPress(event) {
+            if (event.key === 'Enter') {
+                addTask();
+            }
+        }
+
+        function generateSmartTasks() {
+            const focusInput = document.getElementById('focusInput').value.toLowerCase();
+            let suggestions = [];
+            
+            const keywords = {
+                'cisco': ['Study routing concepts quietly for 30 minutes', 'Practice CLI commands with intention', 'Review network protocols mindfully'],
+                'sql': ['Work through 3 thoughtful SQL problems', 'Craft a complex query with care', 'Study optimization techniques'],
+                'python': ['Code mindfully for 45 minutes', 'Continue automation script work', 'Explore a new library gently'],
+                'network': ['Configure settings with attention', 'Study topologies patiently', 'Practice troubleshooting calmly']
+            };
+            
+            Object.keys(keywords).forEach(keyword => {
+                if (focusInput.includes(keyword)) {
+                    suggestions = suggestions.concat(keywords[keyword]);
+                }
+            });
+            
+            if (suggestions.length === 0) {
+                suggestions = [
+                    'Identify three gentle priorities',
+                    'Spend 30 minutes learning something new',
+                    'Organize your workspace mindfully',
+                    'Take a thoughtful break',
+                    'Work on your most important project for an hour'
+                ];
+            }
+            
+            suggestions.slice(0, 3).forEach(suggestion => {
+                const task = {
+                    id: Date.now() + Math.random(),
+                    text: suggestion,
+                    completed: false,
+                    createdAt: new Date()
+                };
+                appState.tasks.push(task);
+                renderTask(task);
+            });
+            
+            updateProgress();
+            updateStats();
+        }
+
+        function updateProgress() {
+            const totalTasks = appState.tasks.length;
+            const completedTasks = appState.tasks.filter(t => t.completed).length;
+            const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            let progressText = 'Beginning the journey';
+            if (progress > 0 && progress < 25) progressText = 'First steps taken';
+            else if (progress >= 25 && progress < 50) progressText = 'Finding rhythm';
+            else if (progress >= 50 && progress < 75) progressText = 'Steady progress';
+            else if (progress >= 75 && progress < 100) progressText = 'Nearly complete';
+            else if (progress === 100) progressText = 'A day well spent';
+            
+            document.getElementById('progressText').textContent = progressText;
+        }
+
+        function updateStats() {
+            const completedTasks = appState.tasks.filter(t => t.completed).length;
+            
+            document.getElementById('todayTasks').textContent = appState.tasks.length;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            document.getElementById('streakCount').textContent = appState.streak;
+        }
+
+        function generateDailyInsight() {
+            const today = new Date().toDateString();
+            const savedInsight = localStorage.getItem('dailyInsight-' + today);
+            
+            if (savedInsight) {
+                document.getElementById('dailyInsight').textContent = savedInsight;
+            } else {
+                const randomInsight = dailyInsights[Math.floor(Math.random() * dailyInsights.length)];
+                document.getElementById('dailyInsight').textContent = randomInsight;
+                localStorage.setItem('dailyInsight-' + today, randomInsight);
+            }
+        }
+
+        function addProject() {
+            const projectName = prompt('Project name:');
+            if (projectName) {
+                const projectDesc = prompt('Brief description:');
+                // Add project logic here
+            }
+        }
+
+        function addLearningGoal() {
+            const goalName = prompt('Learning goal:');
+            if (goalName) {
+                const goalDesc = prompt('What will you explore?');
+                // Add learning goal logic here
+            }
+        }
+
+        function saveNotes() {
+            const ideas = document.getElementById('ideasNotes').value;
+            const reflections = document.getElementById('reflectionNotes').value;
+            
+            localStorage.setItem('savedIdeas', ideas);
+            localStorage.setItem('savedReflections', reflections);
+            
+            // Subtle feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Saved';
+            setTimeout(() => btn.textContent = originalText, 1500);
+        }
+
+        function loadSavedData() {
+            const savedIdeas = localStorage.getItem('savedIdeas');
+            const savedReflections = localStorage.getItem('savedReflections');
+            
+            if (savedIdeas) document.getElementById('ideasNotes').value = savedIdeas;
+            if (savedReflections) document.getElementById('reflectionNotes').value = savedReflections;
+        }
+
+        function saveData() {
+            localStorage.setItem('appTasks', JSON.stringify(appState.tasks));
+            localStorage.setItem('streak', appState.streak.toString());
+        }
+    </script>
+</body>
+</html>
