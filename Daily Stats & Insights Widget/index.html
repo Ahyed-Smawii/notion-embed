@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Stats</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #252525;
+            --card-bg: #2a2a2a;
+            --border-subtle: #3a3a3a;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a8a8a8;
+            --text-muted: #707070;
+            --accent-warm: #d4af37;
+            --accent-cool: #6b8cae;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-weight: 300;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 25px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .widget-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .widget-icon {
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .date-display {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--secondary-bg);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 18px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 300;
+            color: var(--accent-warm);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .reflection-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 20px;
+            text-align: center;
+            border-left: 3px solid var(--accent-warm);
+        }
+
+        .reflection-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            color: var(--accent-warm);
+            margin-bottom: 8px;
+        }
+
+        .reflection-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .mood-selector {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .mood-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .mood-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .mood-btn {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .mood-btn:hover {
+            border-color: var(--accent-cool);
+            background: rgba(107, 140, 174, 0.1);
+        }
+
+        .mood-btn.active {
+            border-color: var(--accent-cool);
+            background: var(--accent-cool);
+        }
+
+        .productivity-ring {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .ring-container {
+            position: relative;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+
+        .ring-background,
+        .ring-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid;
+        }
+
+        .ring-background {
+            border-color: var(--border-subtle);
+        }
+
+        .ring-progress {
+            border-color: var(--accent-warm) transparent transparent transparent;
+            transform: rotate(-90deg);
+            transition: all 0.5s ease;
+        }
+
+        .ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--accent-warm);
+        }
+
+        .ring-label {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <div class="widget-header">
+            <h2 class="widget-title">
+                <span class="widget-icon">•</span>
+                Daily Rhythm
+            </h2>
+        </div>
+
+        <div class="date-display" id="currentDate"></div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number" id="todayTasks">0</span>
+                <div class="stat-label">Tasks</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="completedTasks">0</span>
+                <div class="stat-label">Done</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="streakCount">1</span>
+                <div class="stat-label">Days</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="focusTime">0h</span>
+                <div class="stat-label">Focus</div>
+            </div>
+        </div>
+
+        <div class="productivity-ring">
+            <div class="ring-container">
+                <div class="ring-background"></div>
+                <div class="ring-progress" id="productivityRing"></div>
+                <div class="ring-text" id="productivityScore">0%</div>
+            </div>
+            <div class="ring-label">Today's Flow</div>
+        </div>
+
+        <div class="mood-selector">
+            <label class="mood-label">How does your soul feel?</label>
+            <div class="mood-buttons">
+                <button class="mood-btn" onclick="setMood('contemplative')" title="Contemplative">🤔</button>
+                <button class="mood-btn" onclick="setMood('peaceful')" title="Peaceful">😌</button>
+                <button class="mood-btn" onclick="setMood('focused')" title="Focused">🎯</button>
+                <button class="mood-btn" onclick="setMood('inspired')" title="Inspired">✨</button>
+                <button class="mood-btn" onclick="setMood('melancholy')" title="Melancholy">🌙</button>
+            </div>
+        </div>
+
+        <div class="reflection-card">
+            <h4 class="reflection-title">Today's Whisper</h4>
+            <p class="reflection-text" id="dailyInsight">Every small step carries its own quiet dignity.</p>
+        </div>
+    </div>
+
+    <script>
+        const dailyInsights = [
+            "Every small step carries its own quiet dignity.",
+            "Progress lives in the spaces between intention and action.",
+            "Today's work is tomorrow's foundation, laid stone by stone.",
+            "In the rhythm of routine, we find our deepest truths.",
+            "Each completed task is a small victory over chaos.",
+            "Patience with yourself is the gentlest form of wisdom.",
+            "The mind works best when it moves like water—fluid, persistent.",
+            "Every moment of focus is a gift to your future self.",
+            "In simplicity, we discover what truly matters.",
+            "Growth happens in the quiet moments between efforts.",
+            "Today's struggles are tomorrow's strengths in disguise.",
+            "The path forward reveals itself one step at a time.",
+            "In the stillness of completion, we find our truest peace."
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            updateStats();
+            generateDailyInsight();
+            loadMood();
+            
+            // Update stats every 30 seconds
+            setInterval(updateStats, 30000);
+        });
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                month: 'short', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        function updateStats() {
+            // Get tasks from the other widget
+            const tasks = JSON.parse(localStorage.getItem('quietTasks') || '[]');
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const totalTasks = tasks.length;
+            
+            document.getElementById('todayTasks').textContent = totalTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            
+            // Calculate productivity score
+            let productivityScore = 0;
+            if (totalTasks > 0) {
+                productivityScore = Math.round((completedTasks / totalTasks) * 100);
+            }
+            
+            updateProductivityRing(productivityScore);
+            
+            // Update streak (simple implementation)
+            const today = new Date().toDateString();
+            const lastActive = localStorage.getItem('lastActiveDate');
+            let streak = parseInt(localStorage.getItem('streak')) || 1;
+            
+            if (lastActive !== today && completedTasks > 0) {
+                streak++;
+                localStorage.setItem('streak', streak.toString());
+                localStorage.setItem('lastActiveDate', today);
+            }
+            
+            document.getElementById('streakCount').textContent = streak;
+            
+            // Update focus time (placeholder)
+            const focusTime = localStorage.getItem('focusTime') || '0h';
+            document.getElementById('focusTime').textContent = focusTime;
+        }
+
+        function updateProductivityRing(percentage) {
+            const ring = document.getElementById('productivityRing');
+            const scoreText = document.getElementById('productivityScore');
+            
+            // Calculate the rotation for the ring
+            const rotation = (percentage / 100) * 360;
+            ring.style.transform = `rotate(${rotation - 90}deg)`;
+            
+            scoreText.textContent = percentage + '%';
+        }
+
+        function generateDailyInsight() {
+            const today = new Date().toDateString();
+            const savedInsight = localStorage.getItem('dailyInsight-' + today);
+            
+            if (savedInsight) {
+                document.getElementById('dailyInsight').textContent = savedInsight;
+            } else {
+                const randomInsight = dailyInsights[Math.floor(Math.random() * dailyInsights.length)];
+                document.getElementById('dailyInsight').textContent = randomInsight;
+                localStorage.setItem('dailyInsight-' + today, randomInsight);
+            }
+        }
+
+        function setMood(mood) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Save mood
+            localStorage.setItem('dailyMood', mood);
+            localStorage.setItem('moodDate', new Date().toDateString());
+            
+            // Update insight based on mood
+            updateInsightForMood(mood);
+        }
+
+        function loadMood() {
+            const savedMood = localStorage.getItem('dailyMood');
+            const moodDate = localStorage.getItem('moodDate');
+            const today = new Date().toDateString();
+            
+            if (savedMood && moodDate === today) {
+                const moodButtons = document.querySelectorAll('.mood-btn');
+                moodButtons.forEach(btn => {
+                    if (btn.getAttribute('onclick').includes(savedMood)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        function updateInsightForMood(mood) {
+            const moodInsights = {
+                contemplative: "In quiet reflection, the deepest truths surface gently.",
+                peaceful: "Serenity is not the absence of storms, but peace within them.",
+                focused: "When the mind becomes still, clarity emerges naturally.",
+                inspired: "Inspiration whispers softly to those who listen deeply.",
+                melancholy: "Even in shadows, there is beauty waiting to be discovered."
+            };
+            
+            if (moodInsights[mood]) {
+                document.getElementById('dailyInsight').textContent = moodInsights[mood];
+            }
+        }
+
+        // Simulate focus time tracking
+        let focusStartTime = null;
+        let totalFocusTime = parseInt(localStorage.getItem('totalFocusMinutes') || '0');
+
+        function startFocusTimer() {
+            focusStartTime = Date.now();
+        }
+
+        function endFocusTimer() {
+            if (focusStartTime) {
+                const focusMinutes = Math.floor((Date.now() - focusStartTime) / 60000);
+                totalFocusTime += focusMinutes;
+                localStorage.setItem('totalFocusMinutes', totalFocusTime.toString());
+                
+                const hours = Math.floor(totalFocusTime / 60);
+                const minutes = totalFocusTime % 60;
+                const displayTime = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+                
+                localStorage.setItem('focusTime', displayTime);
+                document.getElementById('focusTime').textContent = displayTime;
+                
+                focusStartTime = null;
+            }
+        }
+
+        // Auto-start focus timer when page is active
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                endFocusTimer();
+            } else {
+                startFocusTimer();
+            }
+        });
+
+        // Start timer on load
+        startFocusTimer();

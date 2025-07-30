@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Focus</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #252525;
+            --card-bg: #2a2a2a;
+            --border-subtle: #3a3a3a;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a8a8a8;
+            --text-muted: #707070;
+            --accent-cool: #6b8cae;
+            --accent-sage: #9caf88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-weight: 300;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 25px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .widget-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .widget-icon {
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .focus-area {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .focus-prompt {
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-cool);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            margin-bottom: 15px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-cool);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            gap: 5px;
+            margin-right: 8px;
+        }
+
+        .btn:hover {
+            background: var(--card-bg);
+            border-color: var(--accent-cool);
+        }
+
+        .btn-primary {
+            background: var(--accent-cool);
+            border-color: var(--accent-cool);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a7ca0;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.75rem;
+        }
+
+        .task-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background: rgba(107, 140, 174, 0.05);
+            margin: 0 -8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .task-checkbox {
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: var(--accent-cool);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .task-completed {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .task-delete {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 3px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .task-item:hover .task-delete {
+            opacity: 1;
+        }
+
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: var(--border-subtle);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-sage);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .task-list::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: var(--border-subtle);
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 2px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <div class="widget-header">
+            <h2 class="widget-title">
+                <span class="widget-icon">•</span>
+                Today's Intent
+            </h2>
+            <button class="btn btn-sm" onclick="clearTasks()">Clear</button>
+        </div>
+
+        <div class="focus-area">
+            <p class="focus-prompt">What weighs on your mind today?</p>
+            <textarea class="form-textarea" 
+                      placeholder="Let your thoughts settle here..." 
+                      rows="3" 
+                      id="focusInput"></textarea>
+        </div>
+
+        <input type="text" 
+               class="form-input" 
+               placeholder="Add a quiet task..." 
+               id="newTaskInput"
+               onkeypress="handleTaskKeyPress(event)">
+
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+            <button class="btn" onclick="generateSmartTasks()">Gentle Suggestions</button>
+        </div>
+
+        <div class="task-list" id="taskList"></div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">Beginning the journey</div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('quietTasks') || '[]');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTasks();
+            updateProgress();
+        });
+
+        function addTask() {
+            const input = document.getElementById('newTaskInput');
+            const taskText = input.value.trim();
+            
+            if (taskText) {
+                const task = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false
+                };
+                
+                tasks.push(task);
+                renderTask(task);
+                input.value = '';
+                updateProgress();
+                saveTasks();
+            }
+        }
+
+        function renderTask(task) {
+            const taskList = document.getElementById('taskList');
+            const taskElement = document.createElement('div');
+            taskElement.className = 'task-item fade-in';
+            taskElement.dataset.taskId = task.id;
+            
+            taskElement.innerHTML = `
+                <input type="checkbox" 
+                       class="task-checkbox" 
+                       ${task.completed ? 'checked' : ''}
+                       onchange="toggleTask(${task.id})">
+                <span class="task-text ${task.completed ? 'task-completed' : ''}">${task.text}</span>
+                <button class="task-delete" onclick="deleteTask(${task.id})">×</button>
+            `;
+            
+            taskList.appendChild(taskElement);
+        }
+
+        function loadTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            tasks.forEach(task => renderTask(task));
+        }
+
+        function toggleTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                
+                const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+                const textElement = taskElement.querySelector('.task-text');
+                
+                if (task.completed) {
+                    textElement.classList.add('task-completed');
+                } else {
+                    textElement.classList.remove('task-completed');
+                }
+                
+                updateProgress();
+                saveTasks();
+            }
+        }
+
+        function deleteTask(taskId) {
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex > -1) {
+                tasks.splice(taskIndex, 1);
+                document.querySelector(`[data-task-id="${taskId}"]`).remove();
+                updateProgress();
+                saveTasks();
+            }
+        }
+
+        function clearTasks() {
+            if (confirm('Clear all tasks? This cannot be undone.')) {
+                tasks = [];
+                document.getElementById('taskList').innerHTML = '';
+                updateProgress();
+                saveTasks();
+            }
+        }
+
+        function handleTaskKeyPress(event) {
+            if (event.key === 'Enter') {
+                addTask();
+            }
+        }
+
+        function generateSmartTasks() {
+            const focusInput = document.getElementById('focusInput').value.toLowerCase();
+            let suggestions = [];
+            
+            const keywords = {
+                'cisco': ['Study routing concepts quietly for 30 minutes', 'Practice CLI commands with intention'],
+                'sql': ['Work through 3 thoughtful SQL problems', 'Craft a complex query with care'],
+                'python': ['Code mindfully for 45 minutes', 'Continue automation script work'],
+                'network': ['Configure settings with attention', 'Study topologies patiently']
+            };
+            
+            Object.keys(keywords).forEach(keyword => {
+                if (focusInput.includes(keyword)) {
+                    suggestions = suggestions.concat(keywords[keyword]);
+                }
+            });
+            
+            if (suggestions.length === 0) {
+                suggestions = [
+                    'Identify three gentle priorities',
+                    'Spend 30 minutes learning something new',
+                    'Organize your workspace mindfully'
+                ];
+            }
+            
+            suggestions.slice(0, 2).forEach(suggestion => {
+                const task = {
+                    id: Date.now() + Math.random(),
+                    text: suggestion,
+                    completed: false
+                };
+                tasks.push(task);
+                renderTask(task);
+            });
+            
+            updateProgress();
+            saveTasks();
+        }
+
+        function updateProgress() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            let progressText = 'Beginning the journey';
+            if (progress > 0 && progress < 25) progressText = 'First steps taken';
+            else if (progress >= 25 && progress < 50) progressText = 'Finding rhythm';
+            else if (progress >= 50 && progress < 75) progressText = 'Steady progress';
+            else if (progress >= 75 && progress < 100) progressText = 'Nearly complete';
+            else if (progress === 100) progressText = 'A day well spent';
+            
+            document.getElementById('progressText').textContent = progressText;
+        }
+
+        function saveTasks() {
+            localStorage.setItem('quietTasks', JSON.stringify(tasks));
+            const focusText = document.getElementById('focusInput').value;
+            localStorage.setItem('dailyFocus', focusText);
+        }
+
+        // Auto-save focus text
+        document.getElementById('focusInput').addEventListener('input', function() {
+            localStorage.setItem('dailyFocus', this.value);
+        });
+
+        // Load saved focus text
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedFocus = localStorage.getItem('dailyFocus');
+            if (savedFocus) {
+                document.getElementById('focusInput').value = savedFocus;
+            }
+        });
+    </script>
+</body>
+</html>

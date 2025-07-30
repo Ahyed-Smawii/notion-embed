@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects & Learning</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #252525;
+            --card-bg: #2a2a2a;
+            --border-subtle: #3a3a3a;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a8a8a8;
+            --text-muted: #707070;
+            --accent-sage: #9caf88;
+            --accent-cool: #6b8cae;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-weight: 300;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 25px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .widget-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .widget-icon {
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            gap: 4px;
+        }
+
+        .btn:hover {
+            background: var(--card-bg);
+            border-color: var(--accent-cool);
+        }
+
+        .btn-primary {
+            background: var(--accent-cool);
+            border-color: var(--accent-cool);
+            color: white;
+        }
+
+        .item-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--accent-sage);
+            transition: all 0.2s ease;
+        }
+
+        .item-card:hover {
+            background: rgba(156, 175, 136, 0.05);
+        }
+
+        .item-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .item-description {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .item-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .item-status {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--card-bg);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .item-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 2px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .item-card:hover .item-btn {
+            opacity: 1;
+        }
+
+        .item-btn:hover {
+            color: var(--accent-cool);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border-subtle);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-sage);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .add-form {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .add-form.active {
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-cool);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 8px 10px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-cool);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <div class="widget-header">
+            <h2 class="widget-title">
+                <span class="widget-icon">•</span>
+                Current Works & Learning
+            </h2>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="section">
+            <div class="section-title">
+                Active Projects
+                <button class="btn" onclick="toggleProjectForm()">+ New</button>
+            </div>
+
+            <div class="add-form" id="projectForm">
+                <input type="text" class="form-input" placeholder="Project name..." id="projectNameInput">
+                <textarea class="form-textarea" placeholder="Brief description..." id="projectDescInput"></textarea>
+                <div class="form-actions">
+                    <button class="btn" onclick="toggleProjectForm()">Cancel</button>
+                    <button class="btn btn-primary" onclick="addProject()">Add Project</button>
+                </div>
+            </div>
+
+            <div id="projectList">
+                <div class="item-card">
+                    <div class="item-title">Network Automation Journey</div>
+                    <div class="item-description">Crafting Python scripts with careful attention to Cisco configurations and network flow</div>
+                    <div class="item-meta">
+                        <span class="item-status">in progress</span>
+                        <div class="item-actions">
+                            <button class="item-btn" onclick="editItem(this)" title="Edit">✏️</button>
+                            <button class="item-btn" onclick="removeItem(this)" title="Remove">×</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-card">
+                    <div class="item-title">Analytics Dashboard</div>
+                    <div class="item-description">Building meaningful insights through thoughtful SQL queries and data visualization</div>
+                    <div class="item-meta">
+                        <span class="item-status">contemplating</span>
+                        <div class="item-actions">
+                            <button class="item-btn" onclick="editItem(this)" title="Edit">✏️</button>
+                            <button class="item-btn" onclick="removeItem(this)" title="Remove">×</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Section -->
+        <div class="section">
+            <div class="section-title">
+                Learning Path
+                <button class="btn" onclick="toggleLearningForm()">+ Add</button>
+            </div>
+
+            <div class="add-form" id="learningForm">
+                <input type="text" class="form-input" placeholder="What are you learning?" id="learningNameInput">
+                <textarea class="form-textarea" placeholder="Describe your learning journey..." id="learningDescInput"></textarea>
+                <input type="range" min="0" max="100" value="0" id="learningProgress" style="width: 100%; margin-bottom: 10px;">
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <small style="color: var(--text-muted);">Progress: <span id="progressDisplay">0%</span></small>
+                </div>
+                <div class="form-actions">
+                    <button class="btn" onclick="toggleLearningForm()">Cancel</button>
+                    <button class="btn btn-primary" onclick="addLearning()">Add Learning</button>
+                </div>
+            </div>
+
+            <div id="learningList">
+                <div class="item-card">
+                    <div class="item-title">Cisco CCNA Journey</div>
+                    <div class="item-description">Understanding the poetry of network protocols, routing algorithms, and infrastructure design</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="item-meta">
+                        <div class="progress-text">three quarters complete</div>
+                        <div class="item-actions">
+                            <button class="item-btn" onclick="updateProgress(this)" title="Update Progress">📊</button>
+                            <button class="item-btn" onclick="editItem(this)" title="Edit">✏️</button>
+                            <button class="item-btn" onclick="removeItem(this)" title="Remove">×</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-card">
+                    <div class="item-title">Advanced SQL Craft</div>
+                    <div class="item-description">Exploring the elegance of complex queries, optimization techniques, and database architecture</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                    <div class="item-meta">
+                        <div class="progress-text">nearly halfway</div>
+                        <div class="item-actions">
+                            <button class="item-btn" onclick="updateProgress(this)" title="Update Progress">📊</button>
+                            <button class="item-btn" onclick="editItem(this)" title="Edit">✏️</button>
+                            <button class="item-btn" onclick="removeItem(this)" title="Remove">×</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let projects = JSON.parse(localStorage.getItem('quietProjects') || '[]');
+        let learningGoals = JSON.parse(localStorage.getItem('quietLearning') || '[]');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjects();
+            loadLearning();
+            
+            // Update progress display in real-time
+            document.getElementById('learningProgress').addEventListener('input', function() {
+                document.getElementById('progressDisplay').textContent = this.value + '%';
+            });
+        });
+
+        function toggleProjectForm() {
+            const form = document.getElementById('projectForm');
+            form.classList.toggle('active');
+            if (form.classList.contains('active')) {
+                document.getElementById('projectNameInput').focus();
+            } else {
+                clearProjectForm();
+            }
+        }
+
+        function toggleLearningForm() {
+            const form = document.getElementById('learningForm');
+            form.classList.toggle('active');
+            if (form.classList.contains('active')) {
+                document.getElementById('learningNameInput').focus();
+            } else {
+                clearLearningForm();
+            }
+        }
+
+        function addProject() {
+            const nameInput = document.getElementById('projectNameInput');
+            const descInput = document.getElementById('projectDescInput');
+            
+            const name = nameInput.value.trim();
+            const description = descInput.value.trim();
+            
+            if (name) {
+                const project = {
+                    id: Date.now(),
+                    name: name,
+                    description: description || 'A new journey begins...',
+                    status: 'contemplating',
+                    createdAt: new Date()
+                };
+                
+                projects.push(project);
+                renderProject(project);
+                saveProjects();
+                clearProjectForm();
+                toggleProjectForm();
+            }
+        }
+
+        function addLearning() {
+            const nameInput = document.getElementById('learningNameInput');
+            const descInput = document.getElementById('learningDescInput');
+            const progressInput = document.getElementById('learningProgress');
+            
+            const name = nameInput.value.trim();
+            const description = descInput.value.trim();
+            const progress = parseInt(progressInput.value);
+            
+            if (name) {
+                const learning = {
+                    id: Date.now(),
+                    name: name,
+                    description: description || 'Exploring new horizons...',
+                    progress: progress,
+                    createdAt: new Date()
+                };
+                
+                learningGoals.push(learning);
+                renderLearning(learning);
+                saveLearning();
+                clearLearningForm();
+                toggleLearningForm();
+            }
+        }
+
+        function renderProject(project) {
+            const projectList = document.getElementById('projectList');
+            const projectElement = document.createElement('div');
+            projectElement.className = 'item-card fade-in';
+            projectElement.dataset.projectId = project.id;
+            
+            projectElement.innerHTML = `
+                <div class="item-title">${project.name}</div>
+                <div class="item-description">${project.description}</div>
+                <div class="item-meta">
+                    <span class="item-status">${project.status}</span>
+                    <div class="item-actions">
+                        <button class="item-btn" onclick="editItem(this)" title="Edit">✏️</button>
+                        <button class="item-btn" onclick="removeItem(this)" title="Remove">×</button>
+                    </div>
+                </div>
+            `;
+            
+            projectList.appendChild(projectElement);
+        }
+
+        function renderLearning(learning) {
+            const learningList = document.getElementById('learningList');
+            const learningElement = document.createElement('div');
+            learningElement.className = 'item-card fade-in';
+            learningElement.dataset.learningId = learning.id;
+            
+            const progressText = getProgressText(learning.progress);
+            
+            learningElement.innerHTML = `
+                <div class="item-title">${learning.name}</div>
+                <div class="item-description">${learning.description}</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${learning.progress}%"></div>
+                </div>
+                <div class="item-meta">
+                    <div class="progress-text">${progressText}</div>
+                    <div class="item-actions">
+                        <button class="item-btn" onclick="updateProgress(this)" title="Update Progress">📊</button>
+                        <button class="item-btn" onclick="editItem(this)" title="Edit">✏️</button>
+                        <button class="item-btn" onclick="removeItem(this)" title="Remove">×</button>
+                    </div>
+                </div>
+            `;
+            
+            learningList.appendChild(learningElement);
+        }
+
+        function getProgressText(progress) {
+            if (progress === 0) return 'just beginning';
+            if (progress < 25) return 'first steps taken';
+            if (progress < 50) return 'gaining momentum';
+            if (progress < 75) return 'well underway';
+            if (progress < 100) return 'nearly complete';
+            return 'journey complete';
+        }
+
+        function updateProgress(button) {
+            const card = button.closest('.item-card');
+            const learningId = parseInt(card.dataset.learningId);
+            const learning = learningGoals.find(l => l.id === learningId);
+            
+            if (learning) {
+                const newProgress = prompt('Enter progress percentage (0-100):', learning.progress);
+                if (newProgress !== null && !isNaN(newProgress)) {
+                    const progress = Math.max(0, Math.min(100, parseInt(newProgress)));
+                    learning.progress = progress;
+                    
+                    const progressFill = card.querySelector('.progress-fill');
+                    const progressText = card.querySelector('.progress-text');
+                    
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = getProgressText(progress);
+                    
+                    saveLearning();
+                }
+            }
+        }
+
+        function editItem(button) {
+            const card = button.closest('.item-card');
+            const title = card.querySelector('.item-title').textContent;
+            const description = card.querySelector('.item-description').textContent;
+            
+            const newTitle = prompt('Edit title:', title);
+            if (newTitle && newTitle !== title) {
+                card.querySelector('.item-title').textContent = newTitle;
+                
+                // Update in storage
+                if (card.dataset.projectId) {
+                    const project = projects.find(p => p.id === parseInt(card.dataset.projectId));
+                    if (project) {
+                        project.name = newTitle;
+                        saveProjects();
+                    }
+                } else if (card.dataset.learningId) {
+                    const learning = learningGoals.find(l => l.id === parseInt(card.dataset.learningId));
+                    if (learning) {
+                        learning.name = newTitle;
+                        saveLearning();
+                    }
+                }
+            }
+        }
+
+        function removeItem(button) {
+            const card = button.closest('.item-card');
+            const title = card.querySelector('.item-title').textContent;
+            
+            if (confirm(`Remove "${title}"? This cannot be undone.`)) {
+                if (card.dataset.projectId) {
+                    const projectIndex = projects.findIndex(p => p.id === parseInt(card.dataset.projectId));
+                    if (projectIndex > -1) {
+                        projects.splice(projectIndex, 1);
+                        saveProjects();
+                    }
+                } else if (card.dataset.learningId) {
+                    const learningIndex = learningGoals.findIndex(l => l.id === parseInt(card.dataset.learningId));
+                    if (learningIndex > -1) {
+                        learningGoals.splice(learningIndex, 1);
+                        saveLearning();
+                    }
+                }
+                
+                card.remove();
+            }
+        }
+
+        function loadProjects() {
+            const projectList = document.getElementById('projectList');
+            // Clear existing custom projects (keep default ones)
+            const customProjects = projectList.querySelectorAll('[data-project-id]');
+            customProjects.forEach(p => p.remove());
+            
+            projects.forEach(project => renderProject(project));
+        }
+
+        function loadLearning() {
+            const learningList = document.getElementById('learningList');
+            // Clear existing custom learning (keep default ones)
+            const customLearning = learningList.querySelectorAll('[data-learning-id]');
+            customLearning.forEach(l => l.remove());
+            
+            learningGoals.forEach(learning => renderLearning(learning));
+        }
+
+        function clearProjectForm() {
+            document.getElementById('projectNameInput').value = '';
+            document.getElementById('projectDescInput').value = '';
+        }
+
+        function clearLearningForm() {
+            document.getElementById('learningNameInput').value = '';
+            document.getElementById('learningDescInput').value = '';
+            document.getElementById('learningProgress').value = 0;
+            document.getElementById('progressDisplay').textContent = '0%';
+        }
+
+        function saveProjects() {
+            localStorage.setItem('quietProjects', JSON.stringify(projects));
+        }
+
+        function saveLearning() {
+            localStorage.setItem('quietLearning', JSON.stringify(learningGoals));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiet Thoughts</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #252525;
+            --card-bg: #2a2a2a;
+            --border-subtle: #3a3a3a;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a8a8a8;
+            --text-muted: #707070;
+            --accent-warm: #d4af37;
+            --accent-cool: #6b8cae;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-weight: 300;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 25px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .widget-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .widget-icon {
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .save-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 2px;
+            background: var(--secondary-bg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .save-status.show {
+            opacity: 1;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 600px) {
+            .notes-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .note-section {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        .note-section:focus-within {
+            border-color: var(--accent-cool);
+        }
+
+        .note-label {
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .note-icon {
+            margin-right: 8px;
+            opacity: 0.8;
+        }
+
+        .note-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: 'Crimson Text', serif;
+            line-height: 1.6;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        .note-textarea:focus {
+            outline: none;
+            border-color: var(--accent-cool);
+        }
+
+        .note-textarea::placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .word-count {
+            opacity: 0.7;
+        }
+
+        .last-saved {
+            opacity: 0.7;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            gap: 5px;
+        }
+
+        .btn:hover {
+            background: var(--card-bg);
+            border-color: var(--accent-cool);
+        }
+
+        .btn-primary {
+            background: var(--accent-cool);
+            border-color: var(--accent-cool);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget">
+        <div class="widget-header">
+            <h2 class="widget-title">
+                <span class="widget-icon">•</span>
+                Quiet Thoughts
+            </h2>
+            <div class="save-status" id="saveStatus">Saved</div>
+        </div>
+        <div class="notes-grid">
+            <div class="note-section">
+                <label class="note-label">
+                    <span class="note-icon">💭</span>
+                    Fleeting Ideas
+                </label>
+                <textarea class="note-textarea" id="ideasNotes" placeholder="Let your mind wander here..."></textarea>
+                <div class="note-meta">
+                    <span class="word-count" id="ideasWordCount">0 words</span>
+                    <span class="last-saved" id="ideasLastSaved">Last saved: never</span>
+                </div>
+            </div>
+            <div class="note-section">
+                <label class="note-label">
+                    <span class="note-icon">🌟</span>
+                    Daily Wisdom
+                </label>
+                <textarea class="note-textarea" id="reflectionNotes" placeholder="What did today teach you?"></textarea>
+                <div class="note-meta">
+                    <span class="word-count" id="reflectionWordCount">0 words</span>
+                    <span class="last-saved" id="reflectionLastSaved">Last saved: never</span>
+                </div>
+            </div>
+        </div>
+        <div class="quick-actions">
+            <button class="btn btn-primary" onclick="saveNotes()">Save Notes</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotes();
+            updateWordCounts();
+        });
+
+        function loadNotes() {
+            const savedIdeas = localStorage.getItem('savedIdeas');
+            const savedReflections = localStorage.getItem('savedReflections');
+            
+            if (savedIdeas) {
+                document.getElementById('ideasNotes').value = savedIdeas;
+                updateLastSaved('ideasLastSaved');
+            }
+            if (savedReflections) {
+                document.getElementById('reflectionNotes').value = savedReflections;
+                updateLastSaved('reflectionLastSaved');
+            }
+        }
+
+        function saveNotes() {
+            const ideas = document.getElementById('ideasNotes').value;
+            const reflections = document.getElementById('reflectionNotes').value;
+            
+            localStorage.setItem('savedIdeas', ideas);
+            localStorage.setItem('savedReflections', reflections);
+            
+            updateLastSaved('ideasLastSaved');
+            updateLastSaved('reflectionLastSaved');
+            
+            showSaveStatus();
+        }
+
+        function updateWordCounts() {
+            const ideasText = document.getElementById('ideasNotes').value;
+            const reflectionText = document.getElementById('reflectionNotes').value;
+            
+            const ideasWordCount = ideasText.split(/\s+/).filter(word => word.length > 0).length;
+            const reflectionWordCount = reflectionText.split(/\s+/).filter(word => word.length > 0).length;
+            
+            document.getElementById('ideasWordCount').textContent = `${ideasWordCount} words`;
+            document.getElementById('reflectionWordCount').textContent = `${reflectionWordCount} words`;
+        }
+
+        function updateLastSaved(elementId) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById(elementId).textContent = `Last saved: ${timeString}`;
+        }
+
+        function showSaveStatus() {
+            const statusElement = document.getElementById('saveStatus');
+            statusElement.classList.add('show');
+            setTimeout(() => {
+                statusElement.classList.remove('show');
+            }, 2000);
+        }
+
+        document.getElementById('ideasNotes').addEventListener('input', updateWordCounts);
+        document.getElementById('reflectionNotes').addEventListener('input', updateWordCounts);
+    </script>
+</body>
+</html>
